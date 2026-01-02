@@ -1,3 +1,7 @@
+<!-- Standalone -->
+
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -62,7 +66,8 @@
     <section id="home" class="hero text-center">
         <div class="container">
             <h1 class="display-5 fw-bold">Tienda de música Hi-Res</h1>
-            <p class="lead text-secondary">Compra y escucha en streaming los álbumes en alta calidad de tus artistas favoritos.</p>
+            <p class="lead text-secondary">Compra y escucha en streaming los álbumes en alta calidad de tus artistas
+                favoritos.</p>
             <button class="btn btn-primary btn-lg mt-3">Navega el catálogo</button>
         </div>
     </section>
@@ -117,10 +122,20 @@
     <!-- Módulo footer -->
     <?php include "footer.php"; ?>
 
-    <!-- Módulo login popup modal -->
-    <?php include "loginModal.php"; ?>
-    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Scripts popup -->
+    <?php if (isset($_GET['register_duplicado'])) {
+        ?><script>document.querySelector('[data-bs-target="#registerModal"]').click();</script><?php
+    } ?>
+
+    <?php if (isset($_GET['registrado'])) {
+        ?><script>document.querySelector('[data-bs-target="#registerModal"]').click();</script><?php
+    } ?>
+
+    <?php if (isset($_GET['login_failed'])) {
+        ?><script>document.querySelector('[data-bs-target="#loginModal"]').click();</script><?php
+    } ?>
 </body>
 
 </html>
