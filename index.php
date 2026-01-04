@@ -77,7 +77,9 @@ include "conexion.php";
 
         .album-cover {
             height: 180px;
-            background-color: #2a2a3d;
+            background-size: cover;
+            background-position: center;
+            border-radius: .5rem .5rem 0 0;
         }
 
         .login-card {
@@ -152,52 +154,91 @@ include "conexion.php";
         </button>
     </div>
 
-    <!-- Featured Albums -->
-    <section class="container my-5">
-        <h3 class="mb-4">Pistas destacadas</h3>
-        <div class="row g-4"> <!-- Línea con gaps -->
-            <div class="col-sm-6 col-md-4 col-lg-3">
-                <div class="card album-card text-light">
-                    <div class="album-cover"></div>
-                    <div class="card-body">
-                        <h6 class="card-title">Plantilla</h6>
-                        <p class="card-text text-secondary">Plantilla</p>
-                        <span class="fw-bold">€12.99</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-4 col-lg-3">
-                <div class="card album-card text-light">
-                    <div class="album-cover"></div>
-                    <div class="card-body">
-                        <h6 class="card-title">Plantilla</h6>
-                        <p class="card-text text-secondary">Plantilla</p>
-                        <span class="fw-bold">€9.99</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-4 col-lg-3">
-                <div class="card album-card text-light">
-                    <div class="album-cover"></div>
-                    <div class="card-body">
-                        <h6 class="card-title">Plantilla</h6>
-                        <p class="card-text text-secondary">Plantilla</p>
-                        <span class="fw-bold">€11.49</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-4 col-lg-3">
-                <div class="card album-card text-light">
-                    <div class="album-cover"></div>
-                    <div class="card-body">
-                        <h6 class="card-title">Plantilla</h6>
-                        <p class="card-text text-secondary">Plantilla</p>
-                        <span class="fw-bold">€14.99</span>
-                    </div>
-                </div>
-            </div>
+    <!-- Featured pistas -->
+    <div id="carouselExampleIndicatorsPistas" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicatorsPistas" data-bs-slide-to="0" class="active"
+                aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicatorsPistas" data-bs-slide-to="1"
+                aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicatorsPistas" data-bs-slide-to="2"
+                aria-label="Slide 3"></button>
         </div>
-    </section>
+        <!-- Sliders --------------------------------------------------------------------------------->
+        <div class="carousel-inner">
+            <?php
+            $i = 1;
+            $vNumeroTarjetas = 4;
+            $vOffset = 0;
+            $vOffsetSumador = $vNumeroTarjetas;
+
+            while ($i <= 2) {
+                // Consulta pistas
+                $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM pista LIMIT ? OFFSET ?");      # Preparar declaración
+                $oMysqli_stmt->bind_param("ii", $vNumeroTarjetas, $vOffset);                         # Atar parámetros/variables
+                $oMysqli_stmt->execute();                                                              # Ejecutar consulta (query)
+                $resultado = $oMysqli_stmt->get_result();
+
+                // Comprobar si existe fila
+                if ($resultado->num_rows > 0) {
+                    // Comprobar primer slider
+                    if ($i == 1) {
+                        $vClaseSlider = "carousel-item active";
+                    } else {
+                        $vClaseSlider = "carousel-item";
+                    }
+                    ?>
+                    <!-- Slider -->
+                    <div class="<?php echo $vClaseSlider ?>">
+                        <section class="container my-5">
+                            <h3 class="mb-4">Las novedades</h3>
+                            <div class="row g-4"> <!-- Línea con gaps -->
+                    <?php
+                    // Tarjeta
+                    while ($row = $resultado->fetch_assoc()) {
+                        // Identificar artista
+                        $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM artista WHERE id_artista = ?");      # Preparar declaración
+                        $oMysqli_stmt->bind_param("i", $row['id_artista']);                         # Atar parámetros/variables
+                        $oMysqli_stmt->execute();                                                              # Ejecutar consulta (query)
+                        $resultadoArtista = $oMysqli_stmt->get_result();
+                        $rowArtista = $resultadoArtista->fetch_assoc();
+                        ?>    
+                        <!-- Contenido -->
+                                <div class="col-sm-6 col-md-4 col-lg-3">
+                                    <div class="card album-card text-light">
+                                        <div class="album-cover" style="background-image: url('<?= htmlspecialchars($row['imagen']) ?>');"></div>
+                                        <div class="card-body">
+                                            <h6 class="card-title"><?php echo $row['titulo'] ?></h6>
+                                            <p class="card-text text-secondary"><?php echo $rowArtista['nombre'] ?></p>
+                                            <span class="fw-bold"><?php echo $row['precio'] ?>€</span>
+                                        </div>
+                                    </div>
+                                </div>
+                    <?php
+                    }
+                    ?>
+                            </div>
+                        </section>
+                    </div><?php
+                }
+
+                $vOffset = $vOffset + $vOffsetSumador;
+                $i++;
+            }
+            ?>
+        </div>
+        <!-------------------------------------------------------------------------------------------->
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicatorsPistas"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicatorsPistas"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
 
     <!-- Módulo footer -->
     <?php include "footer.php"; ?>
