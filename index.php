@@ -157,22 +157,15 @@ include "conexion.php";
     <!-- Featured pistas -->
     <div id="carouselExampleIndicatorsPistas" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleIndicatorsPistas" data-bs-slide-to="0" class="active"
-                aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicatorsPistas" data-bs-slide-to="1"
-                aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleIndicatorsPistas" data-bs-slide-to="2"
-                aria-label="Slide 3"></button>
-        </div>
-        <!-- Sliders --------------------------------------------------------------------------------->
-        <div class="carousel-inner">
             <?php
+            // Configuración slider dinámico
             $i = 1;
-            $vNumeroTarjetas = 4;
+            $vNumSliders = 2        # Número sliders totales
+            $vNumeroTarjetas = 4;   # Número tarjetas por slider
             $vOffset = 0;
             $vOffsetSumador = $vNumeroTarjetas;
 
-            while ($i <= 2) {
+            while ($i <= $vNumSliders) {       # Número de sliders
                 // Consulta pistas
                 $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM pista LIMIT ? OFFSET ?");      # Preparar declaración
                 $oMysqli_stmt->bind_param("ii", $vNumeroTarjetas, $vOffset);                         # Atar parámetros/variables
@@ -184,10 +177,23 @@ include "conexion.php";
                     // Comprobar primer slider
                     if ($i == 1) {
                         $vClaseSlider = "carousel-item active";
+                        ?>
+                        <!-- Crear primer botón indicador inferior -->
+                        <button type="button" data-bs-target="#carouselExampleIndicatorsPistas" data-bs-slide-to="0" class="active"
+                        aria-current="true" aria-label="Slide 1"></button>
+                        <?php
                     } else {
                         $vClaseSlider = "carousel-item";
+                        ?>
+                        <!-- Crear resto botones indicador inferior -->
+                        <button type="button" data-bs-target="#carouselExampleIndicatorsPistas" data-bs-slide-to="<?php $i-1 ?>"
+                        aria-label="Slide <?php $i ?>"></button>
+                        <?php
                     }
                     ?>
+                    </div> <!-- Fin indicadores -->
+                    <!-- Sliders --------------------------------------------------------------------------------->
+                    <div class="carousel-inner">
                     <!-- Slider -->
                     <div class="<?php echo $vClaseSlider ?>">
                         <section class="container my-5">
