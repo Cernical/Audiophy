@@ -1,11 +1,25 @@
 <!-- Standalone -->
 
-<?php session_start(); ?>
+<?php
+session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+include "conexion.php";
+?>
 
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
+    <!-- Favicons generados por realfavicongenerator.net -->
+    <link rel="icon" type="image/png" href="./media/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="./media/favicon.svg" />
+    <link rel="shortcut icon" href="./media/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./media/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Audiophy" />
+    <link rel="manifest" href="./media/site.webmanifest" />
+    <!----------------------------------------------------->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Audiophy: Redescubre la música</title>
@@ -21,13 +35,34 @@
         .navbar {
             background-color: #15151d;
             min-height: 100px;
-            padding-top: 1rem;
-            padding-bottom: 1rem;
+            padding-top: 0rem;
+            padding-bottom: 0rem;
         }
 
         .hero {
             background: linear-gradient(135deg, #1c1c2b, #0f0f14);
             padding: 20rem 1rem;
+        }
+
+        #hero1 {
+            background-image: url('./media/background-02-es.jpg');
+            background-size: cover;
+            background-position: top;
+            background-repeat: no-repeat;
+        }
+
+        #hero2 {
+            background-image: url('./media/background-04-es.jpg.webp');
+            background-size: cover;
+            background-position: top;
+            background-repeat: no-repeat;
+        }
+
+        #hero3 {
+            background-image: url('./media/background-01.jpg.webp');
+            background-size: cover;
+            background-position: top;
+            background-repeat: no-repeat;
         }
 
         .album-card {
@@ -62,20 +97,65 @@
     <!-- Módulo navbar -->
     <?php include "navbar.php"; ?>
 
-    <!-- Hero -->
-    <section id="home" class="hero text-center">
-        <div class="container">
-            <h1 class="display-5 fw-bold">Tienda de música Hi-Res</h1>
-            <p class="lead text-secondary">Compra y escucha en streaming los álbumes en alta calidad de tus artistas
-                favoritos.</p>
-            <button class="btn btn-primary btn-lg mt-3">Navega el catálogo</button>
+    <!-- Slider -->
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+                aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                aria-label="Slide 3"></button>
         </div>
-    </section>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <!-- Hero -->
+                <section id="hero1" class="hero text-left">
+                    <div class="container">
+                        <h1 class="display-5 fw-bold">Descubre</h1>
+                        <p class="lead fw-bold">Streaming musical y descargas en Hi-Res.</p>
+                        <button class="btn btn-warning btn-lg mt-3">Navega el catálogo</button>
+                    </div>
+                </section>
+            </div>
+            <div class="carousel-item">
+                <!-- Hero -->
+                <section id="hero2" class="hero text-left">
+                    <div class="container">
+                        <h1 class="display-5 fw-bold">Explora</h1>
+                        <p class="lead fw-bold">El mayor catálogo Hi-Res para streaming y descargas</p>
+                        <button class="btn btn-warning btn-lg mt-3">Navega el catálogo</button>
+                    </div>
+                </section>
+            </div>
+            <div class="carousel-item">
+                <!-- Hero -->
+                <section id="hero3" class="hero text-left">
+                    <div class="container">
+                        <h1 class="display-5 fw-bold">Disfruta el sonido de los artistas</h1>
+                        <p class="lead fw-bold">Compra y escucha en streaming los álbumes en alta calidad de tus
+                            artistas favoritos.</p>
+                        <button class="btn btn-warning btn-lg mt-3">Navega el catálogo</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
 
     <!-- Featured Albums -->
     <section class="container my-5">
         <h3 class="mb-4">Pistas destacadas</h3>
-        <div class="row g-4">
+        <div class="row g-4"> <!-- Línea con gaps -->
             <div class="col-sm-6 col-md-4 col-lg-3">
                 <div class="card album-card text-light">
                     <div class="album-cover"></div>
@@ -123,19 +203,23 @@
     <?php include "footer.php"; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Scripts popup -->
+
+    <!-- Scripts hacer saltar el popup -->
     <?php if (isset($_GET['register_duplicado'])) {
-        ?><script>document.querySelector('[data-bs-target="#registerModal"]').click();</script><?php
+        ?>
+        <script>document.querySelector('[data-bs-target="#registerModal"]').click();</script><?php
     } ?>
 
     <?php if (isset($_GET['registrado'])) {
-        ?><script>document.querySelector('[data-bs-target="#registerModal"]').click();</script><?php
+        ?>
+        <script>document.querySelector('[data-bs-target="#registerModal"]').click();</script><?php
     } ?>
 
     <?php if (isset($_GET['login_failed'])) {
-        ?><script>document.querySelector('[data-bs-target="#loginModal"]').click();</script><?php
+        ?>
+        <script>document.querySelector('[data-bs-target="#loginModal"]').click();</script><?php
     } ?>
+    <!--------------------------------------------------------------------------------------------->
 </body>
 
 </html>

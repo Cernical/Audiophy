@@ -12,7 +12,12 @@ if (isset($_POST['pLogin'])) {
     if ($fetch = $resultado->fetch_assoc()) {
         if (password_verify($_POST['pSecreto'], $fetch['contraseña'])) {
             // Guardar sesión
-            $_SESSION['sesion'] = [$fetch['id_cliente'], $fetch['nombre']];
+            $_SESSION['sesion'] = [
+                'id'       => $fetch['id_cliente'],
+                'nombre' => $fetch['nombre'],
+                'rol'     => 'usuario',
+                'email'    => $fetch['correo'],
+            ];
             header("Location: index.php");
         } else {
             header("Location: index.php?login_failed");

@@ -17,17 +17,24 @@
             if (isset($_SESSION['sesion'])) {
                 $aSesion = $_SESSION['sesion'];
                 ?>
-                <button class="btn btn-outline-light">
-                    <i class="bi bi-person"></i> <?php echo $aSesion[1]; ?>
-                </button>
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bi bi-person"></i> <?php echo $aSesion['nombre']; ?>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">Perfil</a>
+                        <a class="dropdown-item" href="#">Biblioteca</a>
+                        <a class="dropdown-item" href="logout.php">Cerrar sesión</a>
+                    </div>
+                </div>
                 <?php
             } else {
                 ?>
                 <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginModal">
-                <i class="bi bi-person"></i> Iniciar Sesión
+                    <i class="bi bi-person"></i> Iniciar Sesión
                 </button>
-                <button class="btn btn-outline-light" data-bs-toggle="modal"
-                    data-bs-target="#registerModal">Registrarse
+                <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#registerModal">Registrarse
                 </button>
                 <?php
             }
