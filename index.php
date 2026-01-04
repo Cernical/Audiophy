@@ -160,7 +160,7 @@ include "conexion.php";
             <?php
             // Configuración slider dinámico
             $i = 1;
-            $vNumSliders = 2        # Número sliders totales
+            $vNumSliders = 2;       # Número sliders totales
             $vNumeroTarjetas = 4;   # Número tarjetas por slider
             $vOffset = 0;
             $vOffsetSumador = $vNumeroTarjetas;
@@ -168,8 +168,8 @@ include "conexion.php";
             while ($i <= $vNumSliders) {       # Número de sliders
                 // Consulta pistas
                 $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM pista LIMIT ? OFFSET ?");      # Preparar declaración
-                $oMysqli_stmt->bind_param("ii", $vNumeroTarjetas, $vOffset);                         # Atar parámetros/variables
-                $oMysqli_stmt->execute();                                                              # Ejecutar consulta (query)
+                $oMysqli_stmt->bind_param("ii", $vNumeroTarjetas, $vOffset);                    # Atar parámetros/variables
+                $oMysqli_stmt->execute();                                                       # Ejecutar consulta (query)
                 $resultado = $oMysqli_stmt->get_result();
 
                 // Comprobar si existe fila
