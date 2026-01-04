@@ -89,6 +89,10 @@ include "conexion.php";
             max-width: 420px;
         }
 
+        .album-card-link {
+            text-decoration: none;
+        }
+
         footer {
             background-color: #15151d;
         }
@@ -211,14 +215,16 @@ include "conexion.php";
                         ?>    
                         <!-- Contenido -->
                                 <div class="col-sm-6 col-md-4 col-lg-3">
-                                    <div class="card album-card text-light">
-                                        <div class="album-cover" style="background-image: url('<?= htmlspecialchars($row['imagen']) ?>');"></div>
-                                        <div class="card-body">
-                                            <h6 class="card-title"><?php echo $row['titulo'] ?></h6>
-                                            <p class="card-text text-secondary"><?php echo $rowArtista['nombre'] ?></p>
-                                            <span class="fw-bold"><?php echo $row['precio'] ?>€</span>
+                                    <a class="album-card-link" href="player.php?id=<?php echo $row['id_pista'] ?>&nombre=<?php echo $rowArtista['nombre'] ?>" target="_blank" rel="noopener noreferrer">
+                                        <div class="card album-card text-light">
+                                            <div class="album-cover" style="background-image: url('<?= htmlspecialchars($row['imagen']) ?>');"></div>
+                                            <div class="card-body">
+                                                <h6 class="card-title"><?php echo $row['titulo'] ?></h6>
+                                                <p class="card-text text-secondary"><?php echo $rowArtista['nombre'] ?></p>
+                                                <span class="fw-bold"><?php echo $row['precio'] ?>€</span>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                     <?php
                     }
