@@ -3,6 +3,9 @@
 
 include "conexion.php";
 session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+$vPaginaActual = $_SESSION['paginaActual'];
 
 if (isset($_POST['pLogin'])) {
     $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM cliente WHERE correo = ?");    # Preparar declaración
@@ -18,11 +21,13 @@ if (isset($_POST['pLogin'])) {
                 'rol'     => 'usuario',
                 'email'    => $fetch['correo'],
             ];
-            header("Location: index.php");
+            header("Location: $vPaginaActual");
         } else {
-            header("Location: index.php?login_failed");
+            $_SESSION['login_failed'] = $_POST['pEmail'];
+            header("Location: $vPaginaActual");
         }
     } else {
-        header("Location: index.php?login_failed");
+        $_SESSION['login_failed'] = $_POST['pEmail'];
+        header("Location: $vPaginaActual");
     }
 }

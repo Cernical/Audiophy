@@ -1,5 +1,6 @@
 <?php 
 session_start();
-session_destroy();
-header("Location: index.php");
+$vPaginaActual = $_SESSION['paginaActual'];
+unset($_SESSION['sesion']);
+header("Location: $vPaginaActual");
 ?>

@@ -2,14 +2,17 @@
 
 <?php
 session_start();
+$_SESSION['paginaActual'] = "player.php";
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 include "conexion.php";
 
+
+
 // Conseguir pista
 $oMysqli_stmt = $oMysqli->prepare("SELECT titulo, audio, imagen, descripcion, precio FROM pista WHERE id_pista = ?");
-$oMysqli_stmt->bind_param("i", $_GET['id']);
+$oMysqli_stmt->bind_param("i", $_SESSION['pista']['id']);
 $oMysqli_stmt->execute();
 $pista = $oMysqli_stmt->get_result()->fetch_assoc();
 ?>
@@ -93,12 +96,15 @@ $pista = $oMysqli_stmt->get_result()->fetch_assoc();
     </style>
 </head>
 
-<body>
+<header>
     <!-- Módulo navbar -->
     <?php include "navbar.php"; ?>
+</header>
+
+<body>
 
     <!-- Reproductor -->
-    <div class="container d-flex justify-content-center">
+    <div class="container d-flex justify-content-center my-5">
         <div class="player">
             <img src="<?php echo $pista['imagen']; ?>" alt="Cover">
 
@@ -108,7 +114,7 @@ $pista = $oMysqli_stmt->get_result()->fetch_assoc();
                 <div class="desc"><?php echo $pista['descripcion'] ?></div>
             <?php } ?>
 
-            <div class="mb-3 text-secondary"><?php echo $_GET['nombre'] ?></div>
+            <div class="mb-3 text-secondary"><?php echo $_SESSION['pista']['nombre'] ?></div>
             
             <!-- Reproductor enlazado a JS -->
             <audio id="audio" controls autoplay>
@@ -120,31 +126,25 @@ $pista = $oMysqli_stmt->get_result()->fetch_assoc();
             
             <!-- Comprar -->
             <div>
-                <button class="fw-bold btn btn-warning my-3">Comprar: <?php echo $pista['precio']; ?> €</button>
+                <?php
+                if (isset($_SESSION['sesion'])) {
+                    ?>
+                    <a href=""><button class="fw-bold btn btn-warning my-3">Comprar: <?php echo $pista['precio']; ?> €</button></a>
+                    <?php
+                } else {
+                    ?>
+                    <button class="fw-bold btn btn-warning my-3" data-bs-toggle="modal" data-bs-target="#loginModal">Comprar: <?php echo $pista['precio']; ?> €</button>
+                    <?php
+                }
+                ?>
             </div>
         </div>
     </div>
 
-    <!-- Módulo footer -->
-    <?php include "footer.php"; ?>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Scripts hacer saltar el popup -->
-    <?php if (isset($_GET['register_duplicado'])) {
-        ?>
-        <script>document.querySelector('[data-bs-target="#registerModal"]').click();</script><?php
-    } ?>
-
-    <?php if (isset($_GET['registrado'])) {
-        ?>
-        <script>document.querySelector('[data-bs-target="#registerModal"]').click();</script><?php
-    } ?>
-
-    <?php if (isset($_GET['login_failed'])) {
-        ?>
-        <script>document.querySelector('[data-bs-target="#loginModal"]').click();</script><?php
-    } ?>
+    <?php include "bodyScripts.php"; ?>
     <!----------------------------------->
 
     <!-- Script player -->
@@ -165,6 +165,9 @@ $pista = $oMysqli_stmt->get_result()->fetch_assoc();
     });
     </script>
 </body>
+
+<!-- Módulo footer -->
+<?php include "footer.php"; ?>
 
 </html>
 

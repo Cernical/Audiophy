@@ -11,7 +11,17 @@
                 <form action="login.php" method="post">
                     <div class="mb-3">
                         <label class="form-label">Email</label>
-                        <input type="email" class="form-control" name="pEmail" placeholder="tu@ejemplo.com" required>
+                        <?php
+                        if (isset($_SESSION["login_failed"])) {
+                            ?>
+                            <input type="email" class="form-control" name="pEmail" value="<?php echo $_SESSION["login_failed"] ?>" placeholder="tu@ejemplo.com" required>
+                            <?php
+                        } else {
+                            ?>
+                            <input type="email" class="form-control" name="pEmail" placeholder="tu@ejemplo.com" required>
+                            <?php
+                        }
+                        ?>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Contraseña</label>
@@ -20,7 +30,7 @@
                     <input class="btn btn-primary w100" type="submit" name="pLogin" value="Continuar">
                 </form>
                 <?php
-                if (isset($_GET["login_failed"])) {
+                if (isset($_SESSION["login_failed"])) {
                     ?>
                     <div class="alert alert-danger mt-3" role="alert">
                         Ups, eso no funcionó, pruebe otra vez.

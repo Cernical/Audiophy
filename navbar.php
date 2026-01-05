@@ -18,14 +18,23 @@
                 $aSesion = $_SESSION['sesion'];
                 ?>
                 <div class="dropdown">
-                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownPerfil"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="bi bi-person"></i> <?php echo $aSesion['nombre']; ?>
+                        <i class="bi bi-person-fill"></i> <?php echo $aSesion['nombre']; ?>
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <div class="dropdown-menu" aria-labelledby="dropdownPerfil">
                         <a class="dropdown-item" href="#">Perfil</a>
                         <a class="dropdown-item" href="#">Biblioteca</a>
                         <a class="dropdown-item" href="logout.php">Cerrar sesión</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownCesta"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bi bi-cart-fill"></i> Cesta
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownCesta">
+                        <a class="dropdown-item" href="#">Placeholder</a>
                     </div>
                 </div>
                 <?php

@@ -2,6 +2,7 @@
 
 <?php
 session_start();
+$_SESSION['paginaActual'] = "index.php";
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -99,10 +100,12 @@ include "conexion.php";
     </style>
 </head>
 
-<body>
+<header>
     <!-- Módulo navbar -->
     <?php include "navbar.php"; ?>
+</header>
 
+<body>
     <!-- Slider -->
     <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
@@ -215,9 +218,9 @@ include "conexion.php";
                         ?>    
                         <!-- Contenido -->
                                 <div class="col-sm-6 col-md-4 col-lg-3">
-                                    <a class="album-card-link" href="player.php?id=<?php echo $row['id_pista'] ?>&nombre=<?php echo $rowArtista['nombre'] ?>" target="_blank" rel="noopener noreferrer">
+                                    <a class="album-card-link" href="playerPrep.php?id=<?php echo $row['id_pista'] ?>&nombre=<?php echo $rowArtista['nombre'] ?>">
                                         <div class="card album-card text-light">
-                                            <div class="album-cover" style="background-image: url('<?= htmlspecialchars($row['imagen']) ?>');"></div>
+                                            <div class="album-cover" style="background-image: url('<?php echo $row['imagen'] ?>');"></div>
                                             <div class="card-body">
                                                 <h6 class="card-title"><?php echo $row['titulo'] ?></h6>
                                                 <p class="card-text text-secondary"><?php echo $rowArtista['nombre'] ?></p>
@@ -252,27 +255,14 @@ include "conexion.php";
         </button>
     </div>
 
-    <!-- Módulo footer -->
-    <?php include "footer.php"; ?>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Scripts hacer saltar el popup -->
-    <?php if (isset($_GET['register_duplicado'])) {
-        ?>
-        <script>document.querySelector('[data-bs-target="#registerModal"]').click();</script><?php
-    } ?>
-
-    <?php if (isset($_GET['registrado'])) {
-        ?>
-        <script>document.querySelector('[data-bs-target="#registerModal"]').click();</script><?php
-    } ?>
-
-    <?php if (isset($_GET['login_failed'])) {
-        ?>
-        <script>document.querySelector('[data-bs-target="#loginModal"]').click();</script><?php
-    } ?>
-    <!--------------------------------------------------------------------------------------------->
+    <?php include "bodyScripts.php"; ?>
+    
 </body>
+
+<!-- Módulo footer -->
+<?php include "footer.php"; ?>
 
 </html>
