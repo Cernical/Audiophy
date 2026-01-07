@@ -2,9 +2,23 @@
 
 <?php
 session_start();
-$_SESSION['paginaActual'] = "index.php";
+$_SESSION['paginaActual'] = "catalogo.php";
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+
+// Al pulsar siguiente o atras
+if (isset($_GET['siguiente'])) {
+    if ($_SESSION['pagina'] < $_SESSION['techoPaginas']) {
+        $_SESSION['offset'] = $_SESSION['offset'] + $_SESSION['offsetSumador'];
+        $_SESSION['pagina'] = $_SESSION['pagina'] + 1;
+    }
+}
+if (isset($_GET['atras'])) {
+    if ($_SESSION['pagina'] > 1) {
+        $_SESSION['offset'] = $_SESSION['offset'] - $_SESSION['offsetSumador'];
+        $_SESSION['pagina'] = $_SESSION['pagina'] - 1;
+    }
+}
 
 include "conexion.php";
 ?>
@@ -106,6 +120,108 @@ include "conexion.php";
 </header>
 
 <body>
+    <div class="container">
+        <?php
+        // Comprobar cantidad total de pistas
+        if (!isset($_SESSION['techoPaginas'])) {
+            $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM pista");      # Preparar declaración
+            $oMysqli_stmt->execute();                                      # Ejecutar consulta (query)
+            $resultado = $oMysqli_stmt->get_result();
+            $vNumPistas = $resultado->num_rows;
+        }
+        
+        // Configuración slider dinámico
+        if (!isset($_SESSION['pagina'])) {
+            $_SESSION['pagina'] = 1;    # Por defecto página 1
+        }
+        if (!isset($_SESSION['offset'])) {
+            $_SESSION['offset'] = 0;    # Por defecto offset 0
+        }
+
+        $vNumeroTarjetas = 12;   # Número tarjetas por pagina
+
+        if (!isset($_SESSION['offsetSumador'])) {
+            $_SESSION['offsetSumador'] = $vNumeroTarjetas;    # Por defecto offset 0
+        }
+
+        // Calcular paginación techo(Número de pistas / número tarjetas por página)
+        if (!isset($_SESSION['techoPaginas'])) {
+            $_SESSION['techoPaginas'] = ceil($vNumPistas / $vNumeroTarjetas);
+        }
+
+        // Consulta pistas
+        $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM pista ORDER BY id_pista desc LIMIT ? OFFSET ?");      # Preparar declaración
+        $oMysqli_stmt->bind_param("ii", $vNumeroTarjetas, $_SESSION['offset']);         # Atar parámetros/variables
+        $oMysqli_stmt->execute();                                                       # Ejecutar consulta (query)
+        $resultado = $oMysqli_stmt->get_result();
+
+        // Comprobar si existe fila
+        if ($resultado->num_rows > 0) {
+            ?>
+            <div class="<?php echo $vClaseSlider ?>">
+                <section class="container my-5">
+                    <h3 class="mb-4">Catálogo</h3>
+                    <div class="row g-4"> <!-- Línea con gaps -->
+            <?php
+            // Tarjeta
+            while ($row = $resultado->fetch_assoc()) {
+                // Identificar artista
+                $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM artista WHERE id_artista = ?");      # Preparar declaración
+                $oMysqli_stmt->bind_param("i", $row['id_artista']);                         # Atar parámetros/variables
+                $oMysqli_stmt->execute();                                                              # Ejecutar consulta (query)
+                $resultadoArtista = $oMysqli_stmt->get_result();
+                $rowArtista = $resultadoArtista->fetch_assoc();
+                ?>    
+                        <!-- Contenido -->
+                        <div class="col-sm-6 col-md-4 col-lg-3">
+                            <a class="album-card-link" href="playerPrep.php?id=<?php echo $row['id_pista'] ?>&nombre=<?php echo $rowArtista['nombre'] ?>">
+                                <div class="card album-card text-light">
+                                    <div class="album-cover" style="background-image: url('<?php echo $row['imagen'] ?>');"></div>
+                                    <div class="card-body">
+                                        <h6 class="card-title"><?php echo $row['titulo'] ?></h6>
+                                        <p class="card-text text-secondary"><?php echo $rowArtista['nombre'] ?></p>
+                                        <span class="fw-bold"><?php echo $row['precio'] ?>€</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+            <?php
+            }
+            ?>
+                    </div>
+                </section>
+            </div><?php
+        }
+        ?>
+    </div>
+
+    <div class="container d-flex justify-content-center align-items-center gap-3 mb-5">
+        <?php
+        if ($_SESSION['pagina'] == 1) {
+            ?>
+            <button class="btn btn-dark" style="width: 100px;" disabled>Atrás</button>
+            <?php
+        } else {
+            ?>
+            <a href="catalogo.php?atras"><button class="btn btn-dark" style="width: 100px;">Atrás</button></a>
+            <?php
+        }
+        ?>
+        <p class="mb-0">
+            Página <?php echo $_SESSION['pagina'] ?> de <?php echo $_SESSION['techoPaginas'] ?>
+        </p>
+        <?php
+        if ($_SESSION['pagina'] == $_SESSION['techoPaginas']) {
+            ?>
+            <button class="btn btn-dark" style="width: 100px;" disabled>Siguiente</button>
+            <?php
+        } else {
+            ?>
+            <a href="catalogo.php?siguiente"><button class="btn btn-dark" style="width: 100px;">Siguiente</button></a>
+            <?php
+        }
+        ?>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

@@ -1,4 +1,4 @@
-<!-- Incluido de index -->
+<!-- Incluido de index, player y catalogo -->
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">

@@ -8,8 +8,6 @@ ini_set('display_errors', 1);
 
 include "conexion.php";
 
-
-
 // Conseguir pista
 $oMysqli_stmt = $oMysqli->prepare("SELECT titulo, audio, imagen, descripcion, precio FROM pista WHERE id_pista = ?");
 $oMysqli_stmt->bind_param("i", $_SESSION['pista']['id']);
