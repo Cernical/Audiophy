@@ -20,6 +20,21 @@ if (isset($_GET['atras'])) {
     }
 }
 
+// Gestión géneros
+if (isset($_GET['genero']) and (isset($_SESSION['genero']))) {
+    if ($_SESSION['genero'] != $_GET['genero']) {       # Si se cambia de género
+        $_SESSION['bReiniciarConfiguracion'] = True;
+        $_SESSION['genero'] = $_GET['genero'];          # Si se mantiene
+    } else {
+        $_SESSION['bReiniciarConfiguracion'] = False;
+    }
+}
+if (isset($_GET['genero']) and (!isset($_SESSION['genero']))) {
+    // Primera vez
+    $_SESSION['genero'] = $_GET['genero'];
+    $_SESSION['bReiniciarConfiguracion'] = True;
+}
+
 include "conexion.php";
 ?>
 
@@ -120,38 +135,82 @@ include "conexion.php";
 </header>
 
 <body>
+    <div class="container d-flex justify-content-center align-items-center gap-3 mt-3">
+        <?php
+        $oMysqli_stmt = $oMysqli->prepare("SELECT DISTINCT(genero) FROM pista; ");      # Preparar declaración
+        $oMysqli_stmt->execute();                                                       # Ejecutar consulta (query)
+        $resultado = $oMysqli_stmt->get_result();
+
+        if ($resultado->num_rows > 0) {
+            while ($row = $resultado->fetch_assoc()) {
+                if (isset($_GET['genero'])) {
+                    if ($_GET['genero'] == $row['genero']) {
+                        ?>
+                        <a href="catalogo.php?genero=<?php echo $row['genero'] ?>"><button class="btn btn-light" style="width: 100px;"><?php echo $row['genero'] ?></button></a>
+                        <?php
+                    } else {
+                        ?>
+                        <a href="catalogo.php?genero=<?php echo $row['genero'] ?>"><button class="btn btn-dark" style="width: 100px;"><?php echo $row['genero'] ?></button></a>
+                        <?php
+                    }
+                } else {
+                    ?>
+                    <a href="catalogo.php?genero=<?php echo $row['genero'] ?>"><button class="btn btn-dark" style="width: 100px;"><?php echo $row['genero'] ?></button></a>
+                    <?php
+                }
+            }
+        }
+        ?>
+        <a href="catalogo.php?genero=todos"><button class="btn btn-dark" style="width: 100px;">Todos</button></a>
+    </div>
+
     <div class="container">
         <?php
         // Comprobar cantidad total de pistas
-        if (!isset($_SESSION['techoPaginas'])) {
-            $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM pista");      # Preparar declaración
-            $oMysqli_stmt->execute();                                      # Ejecutar consulta (query)
+        if (!isset($_SESSION['techoPaginas']) or (isset($_SESSION['bReiniciarConfiguracion']))) {
+            if (isset($_GET['genero'])) {
+                if ($_GET['genero'] == "todos") {
+                    $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM pista"); 
+                } else {
+                    $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM pista WHERE genero LIKE ?");      # Preparar declaración
+                    $oMysqli_stmt->bind_param("s", $_GET['genero']);                                   # Atar parámetros/variables
+                }
+            } else {
+                $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM pista");      # Preparar declaración
+            }
+            $oMysqli_stmt->execute();                                          # Ejecutar consulta (query)
             $resultado = $oMysqli_stmt->get_result();
             $vNumPistas = $resultado->num_rows;
         }
         
         // Configuración slider dinámico
-        if (!isset($_SESSION['pagina'])) {
+        if (!isset($_SESSION['pagina']) or (isset($_SESSION['bReiniciarConfiguracion']))) {
             $_SESSION['pagina'] = 1;    # Por defecto página 1
         }
-        if (!isset($_SESSION['offset'])) {
+        if (!isset($_SESSION['offset']) or (isset($_SESSION['bReiniciarConfiguracion']))) {
             $_SESSION['offset'] = 0;    # Por defecto offset 0
         }
 
         $vNumeroTarjetas = 12;   # Número tarjetas por pagina
 
-        if (!isset($_SESSION['offsetSumador'])) {
+        if (!isset($_SESSION['offsetSumador']) or (isset($_SESSION['bReiniciarConfiguracion']))) {
             $_SESSION['offsetSumador'] = $vNumeroTarjetas;    # Por defecto offset 0
         }
 
         // Calcular paginación techo(Número de pistas / número tarjetas por página)
-        if (!isset($_SESSION['techoPaginas'])) {
+        if (!isset($_SESSION['techoPaginas']) or (isset($_SESSION['bReiniciarConfiguracion']))) {
             $_SESSION['techoPaginas'] = ceil($vNumPistas / $vNumeroTarjetas);
         }
 
-        // Consulta pistas
-        $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM pista ORDER BY id_pista desc LIMIT ? OFFSET ?");      # Preparar declaración
-        $oMysqli_stmt->bind_param("ii", $vNumeroTarjetas, $_SESSION['offset']);         # Atar parámetros/variables
+        // Consulta pistas (Por defecto)
+        $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM pista ORDER BY id_pista desc LIMIT ? OFFSET ?");       # Preparar declaración
+        $oMysqli_stmt->bind_param("ii", $vNumeroTarjetas, $_SESSION['offset']);                                 # Preparar declaración
+
+        # En caso de ser un género
+        if (isset($_GET['genero']) and ($_GET['genero'] != "todos")) {
+            $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM pista WHERE genero LIKE ? ORDER BY id_pista desc LIMIT ? OFFSET ?");       # Preparar declaración
+            $oMysqli_stmt->bind_param("sii", $_GET['genero'], $vNumeroTarjetas, $_SESSION['offset']);                                 # Atar parámetros/variables
+        }
         $oMysqli_stmt->execute();                                                       # Ejecutar consulta (query)
         $resultado = $oMysqli_stmt->get_result();
 
