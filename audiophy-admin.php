@@ -2,7 +2,7 @@
 
 <?php
 session_start();
-$_SESSION['paginaActual'] = "lista.php";
+$_SESSION['paginaActual'] = "audiophy-admin.php";
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -130,43 +130,17 @@ $resultado = $oMysqli_stmt->get_result();
 </header>
 
 <body>
-    <h2 class="container my-4">Los 20 más escuchados</h2>
-
-    <div class="container d-flex justify-content-center align-items-center gap-3 mt-3">
-        <table class="table tabla align-middle table-hover">
-            <thead>
-                <!-- Cabeceras -->
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col"></th>
-                    <th scope="col">Título</th>
-                    <th scope="col">Artista</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $i = 1;
-                while ($row = $resultado->fetch_assoc()) {
-                    // Identificar artista
-                    $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM artista WHERE id_artista = ?");       # Preparar declaración
-                    $oMysqli_stmt->bind_param("i", $row['id_artista']);                                    # Atar parámetros/variables
-                    $oMysqli_stmt->execute();                                                              # Ejecutar consulta (query)
-                    $resultadoArtista = $oMysqli_stmt->get_result();
-                    $rowArtista = $resultadoArtista->fetch_assoc();
-                    ?>
-                    <tr>
-                        <th scope="row"><?php echo $i ?></th>
-                        <td><a href="playerPrep.php?id=<?php echo $row['id_pista'] ?>&nombre=<?php echo $rowArtista['nombre'] ?>"><img src="<?= $row['imagen'] ?>" class="cover"></a></td>
-                        <td><?php echo $row['titulo'] ?></td>
-                        <td><?php echo $rowArtista['nombre'] ?></td>
-                    </tr>
-                    <?php
-                    $i++;
-                }
-                ?>
-            </tbody>
-        </table>
-    </div>
+    <form class="container my-5" action="login.php" method="post">
+        <div class="form-group mb-3">
+            <label for="email">Email</label>
+            <input type="email" name="pEmail" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+        </div>
+        <div class="form-group mb-3">
+            <label for="secreto">Contraseña</label>
+            <input type="password" name="pSecreto" class="form-control" id="secreto" placeholder="Password">
+        </div>
+        <button type="submit" name="pLoginAdmin" class="btn btn-primary">Continuar</button>
+    </form>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

@@ -7,21 +7,39 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 $vPaginaActual = $_SESSION['paginaActual'];
 
-if (isset($_POST['pLogin'])) {
-    $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM cliente WHERE correo = ?");    # Preparar declaración
-    $oMysqli_stmt->bind_param("s", $_POST['pEmail']);                         # Atar parámetros/variables
+if (isset($_POST['pLogin']) or (isset($_POST['pLoginAdmin']))) {
+    if (isset($_POST['pLogin'])) {
+        $tabla = "cliente";
+    }
+    if (isset($_POST['pLoginAdmin'])) {
+        $tabla = "admin";
+    }
+    $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM $tabla WHERE correo = ?");           # Preparar declaración
+    $oMysqli_stmt->bind_param("s", $_POST['pEmail']);                                      # Atar parámetros/variables
     $oMysqli_stmt->execute();                                                              # Ejecutar consulta (query)
     $resultado = $oMysqli_stmt->get_result();                                              # Tomar resultado (query2)
     if ($fetch = $resultado->fetch_assoc()) {
         if (password_verify($_POST['pSecreto'], $fetch['contraseña'])) {
             // Guardar sesión
+            if (isset($_POST['pLogin'])) {
+                $vColumnaId = "id_cliente";
+                $vRol = "usuario";
+            }
+            if (isset($_POST['pLoginAdmin'])) {
+                $vColumnaId = "id_admin";
+                $vRol = "superuser";
+            }
             $_SESSION['sesion'] = [
-                'id'       => $fetch['id_cliente'],
+                'id'       => $fetch[$vColumnaId],
                 'nombre' => $fetch['nombre'],
-                'rol'     => 'usuario',
+                'rol'     => $vRol,
                 'email'    => $fetch['correo'],
             ];
-            header("Location: $vPaginaActual");
+            if (isset($_POST['pLoginAdmin'])) {
+                header("Location: panel-control.php");
+            } else {
+                header("Location: $vPaginaActual");
+            }
         } else {
             $_SESSION['login_failed'] = $_POST['pEmail'];
             header("Location: $vPaginaActual");

@@ -40,10 +40,10 @@
                 <?php
             } else {
                 ?>
-                <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginModal">
-                    <i class="bi bi-person"></i> Iniciar Sesión
+                <button class="btn btn-outline-light text-nowrap" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    <i class="bi bi-person"></i>Iniciar Sesión
                 </button>
-                <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#registerModal">Registrarse
+                <button class="btn btn-outline-light text-nowrap" data-bs-toggle="modal" data-bs-target="#registerModal">Registrarse
                 </button>
                 <?php
             }
