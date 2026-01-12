@@ -2,7 +2,7 @@
 
 <?php
 session_start();
-$_SESSION['paginaActual'] = "audiophy-admin.php";
+$_SESSION['paginaActual'] = "panel-control.php";
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -125,37 +125,23 @@ include "conexion.php";
 </header>
 
 <body>
-    <form class="container my-5" action="login.php" method="post">
-        <div class="form-group mb-3">
-            <label for="email">Email</label>
-            <?php
-            if (isset($_SESSION["login_failed"])) {
-                ?>
-                <input type="email" class="form-control" name="pEmail" value="<?php echo $_SESSION["login_failed"] ?>" placeholder="tu@ejemplo.com" required>
-                <?php
+    <div class="container d-flex justify-content-center align-items-center gap-3 mt-3">
+        <?php
+        // Cambiar colores según toggle
+        $aTablasDatos = ["admin", "album", "artista", "cliente", "pista"];
+
+        foreach ($aTablasDatos as $key => $value) {
+            if (isset($_GET['datos']) and ($_GET['datos']) == $value) {
+                $vClase = "light";
             } else {
-                ?>
-                <input type="email" class="form-control" name="pEmail" placeholder="tu@ejemplo.com" required>
-                <?php
+                $vClase = "dark";
             }
             ?>
-        </div>
-        <div class="form-group mb-3">
-            <label for="secreto">Contraseña</label>
-            <input type="password" name="pSecreto" class="form-control" id="secreto" placeholder="Password">
-        </div>
-        <button type="submit" name="pLoginAdmin" class="btn btn-primary">Continuar</button>
-    </form>
-    <?php
-    if (isset($_SESSION["login_failed"])) {
+            <a href="panel-control.php?datos=<?php echo $value ?>"><button class="btn btn-<?php echo $vClase ?>" style="width: 100px;"><?php echo ucfirst($value) ?></button></a>
+            <?php
+        }
         ?>
-        <div class="container alert alert-danger mt-3" role="alert">
-            Ups, eso no funcionó, pruebe otra vez.
-        </div>
-        <?php
-    }
-    ?>
-
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>    
 </body>
 

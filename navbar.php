@@ -9,8 +9,7 @@
         </button>
         <div class="collapse navbar-collapse" id="nav">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link active" href="#home">Descubre</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Géneros</a></li>
+                <li class="nav-item"><a class="nav-link" href="catalogo.php">Descubre</a></li>
                 <li class="nav-item me-3"><a class="nav-link" href="lista.php">Lista</a></li>
             </ul>
             <?php
@@ -23,21 +22,36 @@
                         <i class="bi bi-person-fill"></i> <?php echo $aSesion['nombre']; ?>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownPerfil">
-                        <a class="dropdown-item" href="#">Perfil</a>
-                        <a class="dropdown-item" href="#">Biblioteca</a>
+                        <?php
+                        if ($aSesion['rol'] == "usuario") {
+                            ?>
+                            <a class="dropdown-item" href="#">Perfil</a>
+                            <a class="dropdown-item" href="#">Biblioteca</a>
+                            <?php
+                        }
+                        if ($aSesion['rol'] == "superuser") {
+                            ?>
+                            <a class="dropdown-item" href="panel-control.php">Panel de control</a>
+                            <?php
+                        }
+                        ?>
                         <a class="dropdown-item" href="logout.php">Cerrar sesión</a>
                     </div>
                 </div>
-                <div class="dropdown">
-                    <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownCesta"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="bi bi-cart-fill"></i> Cesta
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownCesta">
-                        <a class="dropdown-item" href="#">Placeholder</a>
-                    </div>
-                </div>
                 <?php
+                if ($aSesion['rol'] == "usuario") {
+                    ?>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownCesta"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bi bi-cart-fill"></i> Cesta
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownCesta">
+                            <a class="dropdown-item" href="#">Placeholder</a>
+                        </div>
+                    </div>
+                    <?php
+                }
             } else {
                 ?>
                 <button class="btn btn-outline-light text-nowrap" data-bs-toggle="modal" data-bs-target="#loginModal">
