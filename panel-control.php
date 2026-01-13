@@ -142,6 +142,265 @@ include "conexion.php";
         }
         ?>
     </div>
+
+    <div class="container d-flex justify-content-center align-items-center gap-3 my-5">
+        <?php
+        if (!isset($_GET['datos'])) {
+            ?>
+            <h2>Bienvenido, <?php echo $_SESSION['sesion']['nombre'] ?></h2>
+            <?php
+        }
+        ?>
+    </div>
+    
+    <?php
+    if (isset($_GET['datos']) and ($_GET['datos']) == "admin") {
+        ?>
+        <div class="container mt-3">
+            <form action="gestorDatos.php" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" name="pEmail" placeholder="tu@ejemplo.com" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" name="pNombre" placeholder="Tu usuario" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" name="pSecreto" placeholder="••••••••" required>
+                </div>
+                <input class="btn btn-primary w100" type="submit" name="pAdmin" value="Añadir">
+            </form>
+            <?php
+            if (isset($_SESSION["login_failed"])) {
+                ?>
+                <div class="alert alert-danger mt-3" role="alert">
+                    Ups, eso no funcionó, pruebe otra vez.
+                </div>
+                <?php
+            }
+            ?>
+        </div>
+        <?php
+    }
+    ?>
+
+    <?php
+    if (isset($_GET['datos']) and ($_GET['datos']) == "album") {
+        ?>
+        <div class="container mt-3">
+            <form action="gestorDatos.php" method="post">
+                <div class="mb-3">
+                    <label for="artistas">Artistas</label>
+                    <select class="form-select" id="artista" name="pArtista" required>
+                        <?php
+                        $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM artista");      # Preparar declaración
+                        $oMysqli_stmt->execute();                                                              # Ejecutar consulta (query)
+                        $resultadoArtista = $oMysqli_stmt->get_result();
+                        while ($rowArtista = $resultadoArtista->fetch_assoc()) {
+                            ?>
+                            <option value="<?php echo $rowArtista['id_artista'] ?>"><?php echo $rowArtista['nombre'] ?></option>
+                            <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Ruta imagen</label>
+                    <input type="text" class="form-control" name="pRuta" placeholder="./media/albumes/caratula.jpg" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-control" name="pTitulo" placeholder="Título" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" class="form-control" name="pDescripcion" placeholder="Texto descriptivo">
+                </div>
+                <div class="mb-3">
+                    <label for="genero">Género</label>
+                    <select class="form-select" id="genero" name="pGenero" required>
+                            <option value="Rock">Rock</option>
+                            <option value="Jazz">Jazz</option>
+                            <option value="Electrónica">Electrónica</option>
+                            <option value="Clásica">Clásica</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Fecha</label>
+                    <input type="datetime" class="form-control" name="pFecha" placeholder="2025-12-30 00:00:00" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Precio</label>
+                    <input type="number" class="form-control" name="pFecha" placeholder="5.76" required>
+                </div>
+                <input class="btn btn-primary w100" type="submit" name="pAlbum" value="Añadir">
+            </form>
+            <?php
+            if (isset($_SESSION["login_failed"])) {
+                ?>
+                <div class="alert alert-danger mt-3" role="alert">
+                    Ups, eso no funcionó, pruebe otra vez.
+                </div>
+                <?php
+            }
+            ?>
+        </div>
+        <?php
+    }
+    ?>
+
+    <?php
+    if (isset($_GET['datos']) and ($_GET['datos']) == "artista") {
+        ?>
+        <div class="container mt-3">
+            <form action="gestorDatos.php" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Ruta imagen</label>
+                    <input type="text" class="form-control" name="pRuta" placeholder="./media/artista/artista.jpg" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" name="pNombre" placeholder="Título" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Origen</label>
+                    <input type="text" class="form-control" name="pOrigen" placeholder="País origen">
+                </div>
+                <input class="btn btn-primary w100" type="submit" name="pArtista" value="Añadir">
+            </form>
+            <?php
+            if (isset($_SESSION["login_failed"])) {
+                ?>
+                <div class="alert alert-danger mt-3" role="alert">
+                    Ups, eso no funcionó, pruebe otra vez.
+                </div>
+                <?php
+            }
+            ?>
+        </div>
+        <?php
+    }
+    ?>
+
+    <?php
+    if (isset($_GET['datos']) and ($_GET['datos']) == "cliente") {
+        ?>
+        <div class="container mt-3">
+            <form action="gestorDatos.php" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" name="pEmail" placeholder="tu@ejemplo.com" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control" name="pNombre" placeholder="Tu usuario" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" name="pSecreto" placeholder="••••••••" required>
+                </div>
+                <input class="btn btn-primary w100" type="submit" name="pCliente" value="Añadir">
+            </form>
+            <?php
+            if (isset($_SESSION["login_failed"])) {
+                ?>
+                <div class="alert alert-danger mt-3" role="alert">
+                    Ups, eso no funcionó, pruebe otra vez.
+                </div>
+                <?php
+            }
+            ?>
+        </div>
+        <?php
+    }
+    ?>
+
+    <?php
+    if (isset($_GET['datos']) and ($_GET['datos']) == "pista") {
+        ?>
+        <div class="container mt-3">
+            <form action="gestorDatos.php" method="post">
+                <div class="mb-3">
+                    <label for="artistas">Artistas</label>
+                    <select class="form-select" id="artista" name="pArtista" required>
+                        <?php
+                        $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM artista");      # Preparar declaración
+                        $oMysqli_stmt->execute();                                                              # Ejecutar consulta (query)
+                        $resultadoArtista = $oMysqli_stmt->get_result();
+                        while ($rowArtista = $resultadoArtista->fetch_assoc()) {
+                            ?>
+                            <option value="<?php echo $rowArtista['id_artista'] ?>"><?php echo $rowArtista['nombre'] ?></option>
+                            <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="albumes">Álbumes</label>
+                    <select class="form-select" id="albumes" name="pAlbumes">
+                        <?php
+                        $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM album");      # Preparar declaración
+                        $oMysqli_stmt->execute();                                                              # Ejecutar consulta (query)
+                        $resultadoAlbumes = $oMysqli_stmt->get_result();
+                        while ($rowAlbumes = $resultadoAlbumes->fetch_assoc()) {
+                            ?>
+                            <option value="<?php echo $rowAlbumes['id_album'] ?>"><?php echo $rowAlbumes['titulo'] ?></option>
+                            <?php
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Ruta audio</label>
+                    <input type="text" class="form-control" name="pAudio" placeholder="./media/pista/audio.flac" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Ruta imagen</label>
+                    <input type="text" class="form-control" name="pRuta" placeholder="./media/pista/caratula.jpg" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-control" name="pTitulo" placeholder="Título">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" class="form-control" name="pDescripcion" placeholder="Texto descriptivo">
+                </div>
+                <div class="mb-3">
+                    <label for="genero">Género</label>
+                    <select class="form-select" id="genero" name="pGenero" required>
+                            <option value="Rock">Rock</option>
+                            <option value="Jazz">Jazz</option>
+                            <option value="Electrónica">Electrónica</option>
+                            <option value="Clásica">Clásica</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Fecha</label>
+                    <input type="datetime" class="form-control" name="pFecha" placeholder="2025-12-30 00:00:00" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Precio</label>
+                    <input type="number" class="form-control" name="pFecha" placeholder="5.76" required>
+                </div>
+                <input class="btn btn-primary w100" type="submit" name="pPista" value="Añadir">
+            </form>
+            <?php
+            if (isset($_SESSION["login_failed"])) {
+                ?>
+                <div class="alert alert-danger mt-3" role="alert">
+                    Ups, eso no funcionó, pruebe otra vez.
+                </div>
+                <?php
+            }
+            ?>
+        </div>
+        <?php
+    }
+    ?>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>    
 </body>
 
