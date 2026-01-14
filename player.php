@@ -125,7 +125,7 @@ $pista = $oMysqli_stmt->get_result()->fetch_assoc();
             <!-- Comprar -->
             <div>
                 <?php
-                if (isset($_SESSION['sesion'])) {
+                if (isset($_SESSION['sesion']) and ($_SESSION['sesion']['rol'] == "usuario")) {
                     ?>
                     <a href=""><button class="fw-bold btn btn-warning my-3">Comprar: <?php echo $pista['precio']; ?> €</button></a>
                     <?php

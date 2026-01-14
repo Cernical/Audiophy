@@ -156,7 +156,7 @@ include "conexion.php";
     <?php
     if (isset($_GET['datos']) and ($_GET['datos']) == "admin") {
         ?>
-        <div class="container mt-3">
+        <div class="container my-5">
             <form action="gestorDatos.php" method="post">
                 <div class="mb-3">
                     <label class="form-label">Email</label>
@@ -173,10 +173,17 @@ include "conexion.php";
                 <input class="btn btn-primary w100" type="submit" name="pAdmin" value="Añadir">
             </form>
             <?php
-            if (isset($_SESSION["login_failed"])) {
+            if (isset($_GET["admin"]) and ($_GET["admin"] == "1")) {
+                ?>
+                <div class="alert alert-success mt-3" role="alert">
+                    Entrada añadida con éxito.
+                </div>
+                <?php
+            }
+            if (isset($_GET["admin"]) and ($_GET["admin"] == "0")) {
                 ?>
                 <div class="alert alert-danger mt-3" role="alert">
-                    Ups, eso no funcionó, pruebe otra vez.
+                    Datos duplicados.
                 </div>
                 <?php
             }
@@ -189,7 +196,7 @@ include "conexion.php";
     <?php
     if (isset($_GET['datos']) and ($_GET['datos']) == "album") {
         ?>
-        <div class="container mt-3">
+        <div class="container my-5">
             <form action="gestorDatos.php" method="post">
                 <div class="mb-3">
                     <label for="artistas">Artistas</label>
@@ -233,15 +240,22 @@ include "conexion.php";
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Precio</label>
-                    <input type="number" class="form-control" name="pFecha" placeholder="5.76" required>
+                    <input type="number" class="form-control" name="pPrecio" step="0.01" placeholder="5.76" required>
                 </div>
                 <input class="btn btn-primary w100" type="submit" name="pAlbum" value="Añadir">
             </form>
             <?php
-            if (isset($_SESSION["login_failed"])) {
+            if (isset($_GET["album"]) and ($_GET["album"] == "1")) {
+                ?>
+                <div class="alert alert-success mt-3" role="alert">
+                    Entrada añadida con éxito.
+                </div>
+                <?php
+            }
+            if (isset($_GET["album"]) and ($_GET["album"] == "0")) {
                 ?>
                 <div class="alert alert-danger mt-3" role="alert">
-                    Ups, eso no funcionó, pruebe otra vez.
+                    Datos duplicados.
                 </div>
                 <?php
             }
@@ -254,7 +268,7 @@ include "conexion.php";
     <?php
     if (isset($_GET['datos']) and ($_GET['datos']) == "artista") {
         ?>
-        <div class="container mt-3">
+        <div class="container my-5">
             <form action="gestorDatos.php" method="post">
                 <div class="mb-3">
                     <label class="form-label">Ruta imagen</label>
@@ -271,10 +285,17 @@ include "conexion.php";
                 <input class="btn btn-primary w100" type="submit" name="pArtista" value="Añadir">
             </form>
             <?php
-            if (isset($_SESSION["login_failed"])) {
+            if (isset($_GET["artista"]) and ($_GET["artista"] == "1")) {
+                ?>
+                <div class="alert alert-success mt-3" role="alert">
+                    Entrada añadida con éxito.
+                </div>
+                <?php
+            }
+            if (isset($_GET["artista"]) and ($_GET["artista"] == "0")) {
                 ?>
                 <div class="alert alert-danger mt-3" role="alert">
-                    Ups, eso no funcionó, pruebe otra vez.
+                    Datos duplicados.
                 </div>
                 <?php
             }
@@ -287,7 +308,7 @@ include "conexion.php";
     <?php
     if (isset($_GET['datos']) and ($_GET['datos']) == "cliente") {
         ?>
-        <div class="container mt-3">
+        <div class="container my-5">
             <form action="gestorDatos.php" method="post">
                 <div class="mb-3">
                     <label class="form-label">Email</label>
@@ -304,10 +325,17 @@ include "conexion.php";
                 <input class="btn btn-primary w100" type="submit" name="pCliente" value="Añadir">
             </form>
             <?php
-            if (isset($_SESSION["login_failed"])) {
+            if (isset($_GET["cliente"]) and ($_GET["cliente"] == "1")) {
+                ?>
+                <div class="alert alert-success mt-3" role="alert">
+                    Entrada añadida con éxito.
+                </div>
+                <?php
+            }
+            if (isset($_GET["cliente"]) and ($_GET["cliente"] == "0")) {
                 ?>
                 <div class="alert alert-danger mt-3" role="alert">
-                    Ups, eso no funcionó, pruebe otra vez.
+                    Datos duplicados.
                 </div>
                 <?php
             }
@@ -320,7 +348,7 @@ include "conexion.php";
     <?php
     if (isset($_GET['datos']) and ($_GET['datos']) == "pista") {
         ?>
-        <div class="container mt-3">
+        <div class="container my-5">
             <form action="gestorDatos.php" method="post">
                 <div class="mb-3">
                     <label for="artistas">Artistas</label>
@@ -388,10 +416,17 @@ include "conexion.php";
                 <input class="btn btn-primary w100" type="submit" name="pPista" value="Añadir">
             </form>
             <?php
-            if (isset($_SESSION["login_failed"])) {
+            if (isset($_GET["pista"]) and ($_GET["pista"] == "1")) {
+                ?>
+                <div class="alert alert-success mt-3" role="alert">
+                    Entrada añadida con éxito.
+                </div>
+                <?php
+            }
+            if (isset($_GET["pista"]) and ($_GET["pista"] == "0")) {
                 ?>
                 <div class="alert alert-danger mt-3" role="alert">
-                    Ups, eso no funcionó, pruebe otra vez.
+                    Datos duplicados.
                 </div>
                 <?php
             }
