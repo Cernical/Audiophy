@@ -123,7 +123,7 @@ include "conexion.php";
                     <div class="container">
                         <h1 class="display-5 fw-bold">Descubre</h1>
                         <p class="lead fw-bold">Streaming musical y descargas en Hi-Res.</p>
-                        <a href="catalogo.php"><button class="btn btn-warning btn-lg mt-3">Navega el catálogo</button></a>
+                        <a href="catalogo.php"><button class="btn btn-warning btn-lg mt-3 fw-bold">Navega el catálogo</button></a>
                     </div>
                 </section>
             </div>
@@ -133,7 +133,7 @@ include "conexion.php";
                     <div class="container">
                         <h1 class="display-5 fw-bold">Explora</h1>
                         <p class="lead fw-bold">El mayor catálogo Hi-Res para streaming y descargas</p>
-                        <a href="catalogo.php"><button class="btn btn-warning btn-lg mt-3">Navega el catálogo</button></a>
+                        <a href="catalogo.php"><button class="btn btn-warning btn-lg mt-3 fw-bold">Navega el catálogo</button></a>
                     </div>
                 </section>
             </div>
@@ -144,7 +144,7 @@ include "conexion.php";
                         <h1 class="display-5 fw-bold">Disfruta el sonido de los artistas</h1>
                         <p class="lead fw-bold">Compra y escucha en streaming los álbumes en alta calidad de tus
                             artistas favoritos.</p>
-                        <a href="catalogo.php"><button class="btn btn-warning btn-lg mt-3">Navega el catálogo</button></a>
+                        <a href="catalogo.php"><button class="btn btn-warning btn-lg mt-3 fw-bold">Navega el catálogo</button></a>
                     </div>
                 </section>
             </div>
@@ -232,7 +232,7 @@ include "conexion.php";
                         ?>    
                         <!-- Contenido -->
                                 <div class="col-sm-6 col-md-4 col-lg-3">
-                                    <a class="album-card-link" href="playerPrep.php?id=<?php echo $row['id_pista'] ?>&nombre=<?php echo $rowArtista['nombre'] ?>">
+                                    <a class="album-card-link" href="playerPrep.php?id=<?php echo $row['id_pista'] ?>&titulo=<?php echo $row['titulo'] ?>&precio=<?php echo $row['precio'] ?>&nombre=<?php echo $rowArtista['nombre'] ?>">
                                         <div class="card album-card text-light">
                                             <div class="album-cover" style="background-image: url('<?php echo $row['imagen'] ?>');"></div>
                                             <div class="card-body">

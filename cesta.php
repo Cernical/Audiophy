@@ -2,16 +2,33 @@
 
 <?php
 session_start();
-$_SESSION['paginaActual'] = "lista.php";
+$_SESSION['paginaActual'] = "index.php";    # En caso de cerrar sesión
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Reiniciar factura para volver a contar
+unset($_SESSION['factura']);
+
+// Limpiar cesta
+if (isset($_GET['vaciar'])) {
+    unset($_SESSION['cesta']);
+    unset($_SESSION['pista']);
+    header("Location: index.php");
+    exit();
+}
+
 include "conexion.php";
 
-// Conseguir lista
-$oMysqli_stmt = $oMysqli->prepare("SELECT id_pista, id_artista, titulo, precio, imagen FROM pista ORDER BY escuchas desc LIMIT 20");      # Preparar declaración
-$oMysqli_stmt->execute();                                                       # Ejecutar consulta (query)
-$resultado = $oMysqli_stmt->get_result();
+// Conseguir pista y actualizar cesta
+if (isset($_SESSION['cesta'])) {
+    $dCesta = $_SESSION['cesta'];                               # Conseguir diccionario de la sesión
+    $dCesta[$_SESSION['pista']['id']] = [$_SESSION['pista']];   # Actualizar diccionario
+    $_SESSION['cesta'] = $dCesta;                               # Volver a guardar a sesión
+} else {
+    // Crear cesta al no existir aún la cesta
+    $dCesta[$_SESSION['pista']['id']] = [$_SESSION['pista']];
+    $_SESSION['cesta'] = $dCesta;
+}
 ?>
 
 <!DOCTYPE html>
@@ -55,6 +72,10 @@ $resultado = $oMysqli_stmt->get_result();
             --bs-table-color: #eaeaf0;
             --bs-table-hover-bg: #15151d;
             --bs-table-hover-color: #eaeaf0;
+        }
+
+        .border-bottom-0 td {
+            border-bottom: 0 !important;
         }
 
         .navbar {
@@ -130,48 +151,50 @@ $resultado = $oMysqli_stmt->get_result();
 </header>
 
 <body>
-    <h2 class="container my-4">Los 20 más escuchados</h2>
+    <h2 class="container my-4">Cesta</h2>
 
     <div class="container d-flex justify-content-center align-items-center gap-3 mt-3">
         <table class="table tabla align-middle table-hover">
             <thead>
                 <!-- Cabeceras -->
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col"></th>
                     <th scope="col">Título</th>
                     <th scope="col">Artista</th>
+                    <th scope="col">Precio</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                $i = 1;
-                while ($row = $resultado->fetch_assoc()) {
-                    // Identificar artista
-                    $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM artista WHERE id_artista = ?");       # Preparar declaración
-                    $oMysqli_stmt->bind_param("i", $row['id_artista']);                                    # Atar parámetros/variables
-                    $oMysqli_stmt->execute();                                                              # Ejecutar consulta (query)
-                    $resultadoArtista = $oMysqli_stmt->get_result();
-                    $rowArtista = $resultadoArtista->fetch_assoc();
+                foreach ($dCesta as $key => $value) {
                     ?>
                     <tr>
-                        <th scope="row"><?php echo $i ?></th>
-                        <td><a href="playerPrep.php?id=<?php echo $row['id_pista'] ?>&titulo=<?php echo $row['titulo'] ?>&precio=<?php echo $row['precio'] ?>&nombre=<?php echo $rowArtista['nombre'] ?>"><img src="<?= $row['imagen'] ?>" class="cover"></a></td>
-                        <td><?php echo $row['titulo'] ?></td>
-                        <td><?php echo $rowArtista['nombre'] ?></td>
+                        <td><?php echo $value[0]['titulo'] ?></td>
+                        <td><?php echo $value[0]['nombre'] ?></td>
+                        <td><?php echo $value[0]['precio'] ?></td>
                     </tr>
                     <?php
-                    $i++;
+                    if (isset($_SESSION['factura'])) {
+                        $_SESSION['factura'] = $_SESSION['factura'] + $_SESSION['pista']['precio'];
+                    } else {
+                        $_SESSION['factura'] = $_SESSION['pista']['precio'];
+                    }
                 }
                 ?>
+                <tr class="border-bottom-0">
+                    <td class="fw-bold">Total</td>
+                    <td></td>
+                    <td class="fw-bold"><?php echo $_SESSION['factura'] ?></td>
+                </tr>
             </tbody>
         </table>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="container d-flex justify-content-center align-items-center gap-3 mt-5 mb-3">
+        <a href="cesta.php?vaciar"><button class="btn btn-dark fw-bold" style="width: 220px;">Vaciar cesta</button></a>
+        <a href="pago.php"><button class="btn btn-primary fw-bold" style="width: 220px;">Continuar con el pago</button></a>
+    </div>
 
-    <!-- Scripts hacer saltar el popup -->
-    <?php include "bodyScripts.php"; ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
 </body>
 

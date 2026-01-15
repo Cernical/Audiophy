@@ -2,16 +2,29 @@
 
 <?php
 session_start();
-$_SESSION['paginaActual'] = "lista.php";
+$_SESSION['paginaActual'] = "index.php";    # Al cerrar sesión
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 include "conexion.php";
 
-// Conseguir lista
-$oMysqli_stmt = $oMysqli->prepare("SELECT id_pista, id_artista, titulo, precio, imagen FROM pista ORDER BY escuchas desc LIMIT 20");      # Preparar declaración
-$oMysqli_stmt->execute();                                                       # Ejecutar consulta (query)
-$resultado = $oMysqli_stmt->get_result();
+// Comprobar formulario
+$bEditado = False;
+if (isset($_POST['pPerfil'])) {
+    foreach ($_POST as $key => $value) {
+        // Editar si contiene valor y no es el botón de editar
+        if (($value) and ($key != "pPerfil")) {
+            // Comprobar si es contraseña
+            if ($key == "contraseña") {
+                    $value = password_hash($value, PASSWORD_DEFAULT);                      # Default alg.
+            }
+            $oMysqli_stmt = $oMysqli->prepare("UPDATE cliente SET $key = ? WHERE id_cliente = ?");     # Preparar declaración
+            $oMysqli_stmt->bind_param("si", $value, $_SESSION['sesion']['id']);                        # Atar parámetros/variables
+            $oMysqli_stmt->execute(); # Ejecutar consulta (query)
+            $bEditado = True;
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -130,49 +143,49 @@ $resultado = $oMysqli_stmt->get_result();
 </header>
 
 <body>
-    <h2 class="container my-4">Los 20 más escuchados</h2>
-
-    <div class="container d-flex justify-content-center align-items-center gap-3 mt-3">
-        <table class="table tabla align-middle table-hover">
-            <thead>
-                <!-- Cabeceras -->
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col"></th>
-                    <th scope="col">Título</th>
-                    <th scope="col">Artista</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $i = 1;
-                while ($row = $resultado->fetch_assoc()) {
-                    // Identificar artista
-                    $oMysqli_stmt = $oMysqli->prepare("SELECT * FROM artista WHERE id_artista = ?");       # Preparar declaración
-                    $oMysqli_stmt->bind_param("i", $row['id_artista']);                                    # Atar parámetros/variables
-                    $oMysqli_stmt->execute();                                                              # Ejecutar consulta (query)
-                    $resultadoArtista = $oMysqli_stmt->get_result();
-                    $rowArtista = $resultadoArtista->fetch_assoc();
-                    ?>
-                    <tr>
-                        <th scope="row"><?php echo $i ?></th>
-                        <td><a href="playerPrep.php?id=<?php echo $row['id_pista'] ?>&titulo=<?php echo $row['titulo'] ?>&precio=<?php echo $row['precio'] ?>&nombre=<?php echo $rowArtista['nombre'] ?>"><img src="<?= $row['imagen'] ?>" class="cover"></a></td>
-                        <td><?php echo $row['titulo'] ?></td>
-                        <td><?php echo $rowArtista['nombre'] ?></td>
-                    </tr>
-                    <?php
-                    $i++;
-                }
-                ?>
-            </tbody>
-        </table>
+    <div class="container d-flex justify-content-center align-items-center gap-3 my-5">
+        <h2>Bienvenido, <?php echo $_SESSION['sesion']['nombre'] ?></h2>
+    </div>
+    
+    <div class="container my-5">
+        <form action="perfil.php" method="post">
+            <div class="mb-3">
+                <h3><label class="form-label">Mi cuenta</label></h3>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" name="correo" placeholder="<?php echo $_SESSION['sesion']['email'] ?>">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="nombre" placeholder="<?php echo $_SESSION['sesion']['nombre'] ?>" readonly>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Contraseña</label>
+                <input type="password" class="form-control" name="contraseña" placeholder="••••••••">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Dirección de facturación</label>
+                <input type="text" class="form-control" name="direccion" maxlength="64" placeholder="41530, Morón de la Frontera, Sevilla, España">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Tarjeta</label>
+                <input type="number" class="form-control" name="tarjeta" minlength="16" maxlength="16" placeholder="0123456789012345">
+            </div>
+            <input class="btn btn-primary w100" type="submit" name="pPerfil" value="Actualizar">
+        </form>
+        <?php
+        if (isset($_POST['pPerfil'])) {
+            ?>
+            <div class="alert alert-success mt-3" role="alert">
+                Entrada editada con éxito.
+            </div>
+            <?php
+        }
+        ?>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Scripts hacer saltar el popup -->
-    <?php include "bodyScripts.php"; ?>
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>    
 </body>
 
 <!-- Módulo footer -->

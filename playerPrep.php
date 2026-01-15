@@ -4,8 +4,10 @@ include "conexion.php";
 
 // Guardar pista a escuchar
 $_SESSION['pista'] = [
-    'id'       => $_GET['id'],     # ID Canción
-    'nombre' => $_GET['nombre'],   # Nombre artista
+    'id'        => $_GET['id'],     # ID Canción
+    'titulo'    => $_GET['titulo'],
+    'precio'    => $_GET['precio'],
+    'nombre'    => $_GET['nombre']   # Nombre artista
 ];
 
 // Actualizar escuchas
@@ -14,3 +16,4 @@ $oMysqli_stmt->bind_param("i", $_GET['id']);                                    
 $oMysqli_stmt->execute();                                                                          # Ejecutar consulta (query)
 
 header("Location: player.php");
+exit();

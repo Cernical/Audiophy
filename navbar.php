@@ -19,13 +19,13 @@
                 <div class="dropdown">
                     <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownPerfil"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="bi bi-person-fill"></i> <?php echo $aSesion['nombre']; ?>
+                        <i class="bi bi-person-fill"></i> Hola <?php echo $aSesion['nombre']; ?>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownPerfil">
                         <?php
                         if ($aSesion['rol'] == "usuario") {
                             ?>
-                            <a class="dropdown-item" href="#">Perfil</a>
+                            <a class="dropdown-item" href="perfil.php">Perfil</a>
                             <a class="dropdown-item" href="#">Biblioteca</a>
                             <?php
                         }
@@ -47,7 +47,23 @@
                             <i class="bi bi-cart-fill"></i> Cesta
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownCesta">
-                            <a class="dropdown-item" href="#">Placeholder</a>
+                            <?php
+                            if (isset($_SESSION['cesta'])) {
+                                $dCesta = $_SESSION['cesta'];
+                                foreach ($dCesta as $key => $value) {
+                                ?>
+                                    <a class="dropdown-item text-primary" href="playerPrep.php?id=<?php echo $key ?>&titulo=<?php echo $value[0]['titulo'] ?>&precio=<?php echo $value[0]['precio'] ?>&nombre=<?php echo $value[0]['nombre'] ?>"><?php echo $value[0]['titulo'] ?> - <?php echo $value[0]['nombre'] ?></a>
+                                <?php
+                                }
+                                ?>
+                                <a class="dropdown-item" href="cesta.php">Ver cesta</a>
+                                <?php
+                            } else {
+                                ?>
+                                <a class="dropdown-item">Cesta vacía</a>
+                                <?php
+                            }
+                            ?>
                         </div>
                     </div>
                     <?php

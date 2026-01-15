@@ -146,22 +146,22 @@ include "conexion.php";
                 if (isset($_GET['genero'])) {
                     if ($_GET['genero'] == $row['genero']) {
                         ?>
-                        <a href="catalogo.php?genero=<?php echo $row['genero'] ?>"><button class="btn btn-light" style="width: 100px;"><?php echo $row['genero'] ?></button></a>
+                        <a href="catalogo.php?genero=<?php echo $row['genero'] ?>"><button class="btn btn-light fw-bold" style="width: 100px;"><?php echo $row['genero'] ?></button></a>
                         <?php
                     } else {
                         ?>
-                        <a href="catalogo.php?genero=<?php echo $row['genero'] ?>"><button class="btn btn-dark" style="width: 100px;"><?php echo $row['genero'] ?></button></a>
+                        <a href="catalogo.php?genero=<?php echo $row['genero'] ?>"><button class="btn btn-dark fw-bold" style="width: 100px;"><?php echo $row['genero'] ?></button></a>
                         <?php
                     }
                 } else {
                     ?>
-                    <a href="catalogo.php?genero=<?php echo $row['genero'] ?>"><button class="btn btn-dark" style="width: 100px;"><?php echo $row['genero'] ?></button></a>
+                    <a href="catalogo.php?genero=<?php echo $row['genero'] ?>"><button class="btn btn-dark fw-bold" style="width: 100px;"><?php echo $row['genero'] ?></button></a>
                     <?php
                 }
             }
         }
         ?>
-        <a href="catalogo.php?genero=todos"><button class="btn btn-dark" style="width: 100px;">Todos</button></a>
+        <a href="catalogo.php?genero=todos"><button class="btn btn-dark fw-bold" style="width: 100px;">Todos</button></a>
     </div>
 
     <div class="container">
@@ -233,7 +233,7 @@ include "conexion.php";
                 ?>    
                         <!-- Contenido -->
                         <div class="col-sm-6 col-md-4 col-lg-3">
-                            <a class="album-card-link" href="playerPrep.php?id=<?php echo $row['id_pista'] ?>&nombre=<?php echo $rowArtista['nombre'] ?>">
+                            <a class="album-card-link" href="playerPrep.php?id=<?php echo $row['id_pista'] ?>&titulo=<?php echo $row['titulo'] ?>&precio=<?php echo $row['precio'] ?>&nombre=<?php echo $rowArtista['nombre'] ?>">
                                 <div class="card album-card text-light">
                                     <div class="album-cover" style="background-image: url('<?php echo $row['imagen'] ?>');"></div>
                                     <div class="card-body">
