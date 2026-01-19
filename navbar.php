@@ -26,7 +26,7 @@
                         if ($aSesion['rol'] == "usuario") {
                             ?>
                             <a class="dropdown-item" href="perfil.php">Perfil</a>
-                            <a class="dropdown-item" href="#">Biblioteca</a>
+                            <a class="dropdown-item" href="biblioteca.php">Biblioteca</a>
                             <?php
                         }
                         if ($aSesion['rol'] == "superuser") {

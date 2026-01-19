@@ -6,6 +6,11 @@ $_SESSION['paginaActual'] = "panel-control.php";
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+if (!isset($_SESSION['sesion']) or ($_SESSION['sesion']['rol'] == "usuario")) {
+    header("Location: index.php");
+    exit();
+}
+
 include "conexion.php";
 ?>
 

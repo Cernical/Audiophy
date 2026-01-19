@@ -6,6 +6,17 @@ $_SESSION['paginaActual'] = "index.php";    # En caso de cerrar sesión
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Realizar pago
+if (isset($_POST['pTarjeta'])) {
+    if (isset($_POST['pGuardar'])) {
+        $_SESSION['sesion']['tarjeta'] = $_POST['pTarjeta'];
+        header("Location: pago.php?guardar");
+    } else {
+        header("Location: pago.php");
+    }
+    exit();
+}
+
 // Reiniciar factura para volver a contar
 unset($_SESSION['factura']);
 
@@ -174,9 +185,9 @@ if (isset($_SESSION['cesta'])) {
                     </tr>
                     <?php
                     if (isset($_SESSION['factura'])) {
-                        $_SESSION['factura'] = $_SESSION['factura'] + $_SESSION['pista']['precio'];
+                        $_SESSION['factura'] = $_SESSION['factura'] + $value[0]['precio'];
                     } else {
-                        $_SESSION['factura'] = $_SESSION['pista']['precio'];
+                        $_SESSION['factura'] = $value[0]['precio'];
                     }
                 }
                 ?>
@@ -191,11 +202,24 @@ if (isset($_SESSION['cesta'])) {
 
     <div class="container d-flex justify-content-center align-items-center gap-3 mt-5 mb-3">
         <a href="cesta.php?vaciar"><button class="btn btn-dark fw-bold" style="width: 220px;">Vaciar cesta</button></a>
-        <a href="pago.php"><button class="btn btn-primary fw-bold" style="width: 220px;">Continuar con el pago</button></a>
+        <button class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#pagoModal" style="width: 220px;">
+            Continuar con el pago
+        </button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
+
+    <!-- Módulo pago popup modal -->
+    <?php include "pagoModal.php"; ?>
+
+    <!-- Script hacer saltar el popup -->
+    <?php if (isset($_POST['pPago'])) {
+        // En caso de selección pendiente en el modal
+        ?>
+        <script>document.querySelector('[data-bs-target="#pagoModal"]').click();</script>
+        <?php
+    } 
+    ?>
 </body>
 
 <!-- Módulo footer -->

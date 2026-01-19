@@ -170,7 +170,7 @@ if (isset($_POST['pPerfil'])) {
             </div>
             <div class="mb-3">
                 <label class="form-label">Tarjeta</label>
-                <input type="number" class="form-control" name="tarjeta" minlength="16" maxlength="16" placeholder="0123456789012345">
+                <input type="text" class="form-control" name="tarjeta" minlength="16" maxlength="16" placeholder="0123456789012345">
             </div>
             <input class="btn btn-primary w100" type="submit" name="pPerfil" value="Actualizar">
         </form>

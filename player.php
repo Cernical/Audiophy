@@ -13,6 +13,18 @@ $oMysqli_stmt = $oMysqli->prepare("SELECT titulo, audio, imagen, descripcion, pr
 $oMysqli_stmt->bind_param("i", $_SESSION['pista']['id']);
 $oMysqli_stmt->execute();
 $pista = $oMysqli_stmt->get_result()->fetch_assoc();
+
+// Comprobar si está comprada
+$oMysqli_stmt = $oMysqli->prepare("SELECT id_pista FROM pista WHERE id_pista = ? AND id_pista IN (SELECT id_pista FROM pedido, linea_pedido WHERE pedido.id_pedido = linea_pedido.id_pedido AND pedido.id_cliente = ?)");
+$oMysqli_stmt->bind_param("ii", $_SESSION['pista']['id'], $_SESSION['sesion']['id']);
+$oMysqli_stmt->execute();
+$comprada = $oMysqli_stmt->get_result()->fetch_assoc();
+
+if (isset($comprada['id_pista'])) {
+    $bComprada = True;
+} else {
+    $bComprada = False;
+}
 ?>
 
 <!DOCTYPE html>
@@ -120,15 +132,28 @@ $pista = $oMysqli_stmt->get_result()->fetch_assoc();
             </audio>
 
             <!-- Contador enlazado a JS -->
-            <div id="timer">Iniciar prueba</div>
+            <?php
+            if (!$bComprada) {
+                ?>
+                <div id="timer">Iniciar prueba</div>
+                <?php
+            }
+            ?>
             
             <!-- Comprar -->
             <div>
                 <?php
                 if (isset($_SESSION['sesion']) and ($_SESSION['sesion']['rol'] == "usuario")) {
-                    ?>
-                    <a href="cesta.php"><button class="fw-bold btn btn-warning my-3">Comprar: <?php echo $pista['precio']; ?> €</button></a>
-                    <?php
+                    // Comprobar si está comprada
+                    if ($bComprada) {
+                        ?>
+                        <a href="<?php echo $pista['audio'] ?>" download><button class="fw-bold btn btn-warning my-3">Descargar</button></a>
+                        <?php
+                    } else {
+                        ?>
+                        <a href="cesta.php"><button class="fw-bold btn btn-warning my-3">Comprar: <?php echo $pista['precio']; ?> €</button></a>
+                        <?php
+                    }
                 } else {
                     ?>
                     <button class="fw-bold btn btn-warning my-3" data-bs-toggle="modal" data-bs-target="#loginModal">Comprar: <?php echo $pista['precio']; ?> €</button>
@@ -147,20 +172,27 @@ $pista = $oMysqli_stmt->get_result()->fetch_assoc();
 
     <!-- Script player -->
     <script>
-    const audio = document.getElementById('audio'); // Enlazado al reproductor
-    const timer = document.getElementById('timer'); // Enlazado al contador
-    const vTiempoLimite = 30;                       // Tiempo de prueba
+        const audio = document.getElementById('audio'); // Enlazado al reproductor
+        const timer = document.getElementById('timer'); // Enlazado al contador
+        const vTiempoLimite = 30;                       // Tiempo de prueba
 
-    audio.addEventListener('timeupdate', () => {
-        const vTiempoRestante = Math.max(0, vTiempoLimite - audio.currentTime);
-        timer.textContent = Math.ceil(vTiempoRestante) + "s restantes";
-
-        if (audio.currentTime >= vTiempoLimite) {
-            audio.pause();
-            audio.currentTime = vTiempoLimite;      // Evita comprobar de nuevo
-            timer.textContent = "Se acabó la prueba";
+        <?php
+        // Comprobar si está comprada
+        if (!$bComprada) {
+            ?>
+            audio.addEventListener('timeupdate', () => {
+                const vTiempoRestante = Math.max(0, vTiempoLimite - audio.currentTime);
+                timer.textContent = Math.ceil(vTiempoRestante) + "s restantes";
+        
+                if (audio.currentTime >= vTiempoLimite) {
+                    audio.pause();
+                    audio.currentTime = vTiempoLimite;      // Evita comprobar de nuevo
+                    timer.textContent = "Se acabó la prueba";
+                }
+            });
+            <?php
         }
-    });
+        ?>
     </script>
 </body>
 
